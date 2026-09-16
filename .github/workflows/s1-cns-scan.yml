@@ -47,7 +47,19 @@ jobs:
             --scope-id "${{ vars.S1_SCOPE_ID }}" \
             --policy-id "${{ vars.S1_POLICY_ID }}"
 
+      # continue-on-error on all three scan steps below: s1-cns-cli exits
+      # non-zero whenever a scan's results trip the configured policy's exit
+      # conditions (expected - the planted secrets/misconfigs/CVEs are the
+      # whole point of this demo, and the low default threshold means the
+      # secret scan alone will essentially always trip it). Without
+      # continue-on-error, GitHub Actions stops the job at the first failing
+      # step by default, so IaC and vulnerability scans would never even run.
+      # Each still publishes its own results regardless of its own exit
+      # code; "Check scan results" below fails the job overall afterward if
+      # any of the three did.
       - name: Secret scan
+        id: secret_scan
+        continue-on-error: true
         run: |
           s1-cns-cli scan secret \
             -d . \
@@ -58,6 +70,8 @@ jobs:
             --provider GITHUB
 
       - name: IaC scan
+        id: iac_scan
+        continue-on-error: true
         run: |
           s1-cns-cli scan iac \
             -d infra \
@@ -68,11 +82,27 @@ jobs:
             --provider GITHUB
 
       - name: Vulnerability scan
+        id: vuln_scan
+        continue-on-error: true
         run: |
+          # Confirmed live: unlike iac/secret, `scan vuln` doesn't accept
+          # --branch at all - passing it errors with "unrecognized arguments".
           s1-cns-cli scan vuln \
             -d app \
             --publish-result \
             --repo-url "${{ github.server_url }}/${{ github.repository }}" \
             --repo-full-name "${{ github.repository }}" \
-            --provider GITHUB \
-            --branch "${{ github.head_ref }}"
+            --provider GITHUB
+
+      - name: Check scan results
+        if: always()
+        run: |
+          echo "Secret scan:        ${{ steps.secret_scan.outcome }}"
+          echo "IaC scan:           ${{ steps.iac_scan.outcome }}"
+          echo "Vulnerability scan:  ${{ steps.vuln_scan.outcome }}"
+          if [ "${{ steps.secret_scan.outcome }}" = "failure" ] || \
+             [ "${{ steps.iac_scan.outcome }}" = "failure" ] || \
+             [ "${{ steps.vuln_scan.outcome }}" = "failure" ]; then
+            echo "One or more scans tripped the configured policy's exit conditions - failing this check."
+            exit 1
+          fi
