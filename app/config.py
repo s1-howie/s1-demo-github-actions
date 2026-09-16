@@ -1,10 +1,6 @@
 """
 Deliberately leaked credentials for the CI/CD secret-scanning demo (see
-cicd-demo-app/README.md). All three of these are fake and unusable - not
-the well-known AWS/Stripe documentation placeholder values (those are
-allowlisted by most secret scanners, including this one, precisely because
-they show up in so many public repos - using them here would silently
-produce zero findings instead of demonstrating the detection).
+cicd-demo-app/README.md). All three of these are fake and unusable.
 """
 
 # AWS Canary Token
