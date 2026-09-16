@@ -101,3 +101,9 @@ To show the "fix it and the check goes green" arc: pin a
 `requirements.txt` entry to a patched version, remove the public-access
 block override in `infra/main.tf`, or delete a hardcoded credential from
 `config.py`, then push again to the same PR.
+
+
+<!-- Opened automatically by Terraform (github_repository_pull_request in
+s1-cnapp-terraform's github/ environment) purely to give s1-cns-scan.yml
+a pull_request event to fire on for the first time. Safe to close/merge
+however you like. -->
