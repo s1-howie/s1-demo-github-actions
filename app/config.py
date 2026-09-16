@@ -7,14 +7,14 @@ they show up in so many public repos - using them here would silently
 produce zero findings instead of demonstrating the detection).
 """
 
-# Matches the AKIA[16 alphanumeric] AWS access key ID pattern.
-AWS_ACCESS_KEY_ID = "AKIA2PLANEXDEMOKEY01"
+# AWS Canary Token
+AWS_ACCESS_KEY_ID = "AKIA3ZSAAYKVTW3NBM7L"
 
-# Matches AWS's 40-character secret access key format.
-AWS_SECRET_ACCESS_KEY = "PLANEXdemoSECRETkey1234567890abcdefGHIJ"
+# AWS Canary Token.
+AWS_SECRET_ACCESS_KEY = "P3gPx5kSXga/ZPb/IkmZAbTyjCspZ+3hnUyYl3wp"
 
-# Matches Stripe's live secret key format (sk_live_...).
-STRIPE_SECRET_KEY = "sk_live_51MxAmPL3PlanExFakeKeyDoNotUse00"
+# Matches Stripe's live secret key format (sk_test_...).
+STRIPE_SECRET_KEY = "sk_test_51L53TeSBwzby5YcBooVe7xqrw9DrV7SWyW5WKKYGSFO4fNSoDyd167DZrmIW6lZE6pHUDrYe9zfqGnCHTQUKhnPc00eL5w5pxY"
 
 # A full connection string with embedded credentials - a different, very
 # common real-world secret-leak shape (not a bare API key) than the two
