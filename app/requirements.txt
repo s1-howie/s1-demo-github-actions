@@ -1,0 +1,10 @@
+# Deliberately outdated pins for the vulnerability-scanning demo (see
+# cicd-demo-app/README.md) - each of these has real, well-documented CVEs
+# at the pinned version, giving a spread of severities for
+# `s1-cns-cli scan vuln` to surface.
+Flask==0.12.2
+Werkzeug==0.15.4
+Jinja2==2.10.1
+PyYAML==5.3.1
+requests==2.19.1
+urllib3==1.24.1
