@@ -56,6 +56,19 @@ instead of demonstrating detection.
 5. **Enable GitHub Actions** for this repo if it isn't already (*Settings →
    Actions → General*) - Terraform can't flip this one for you (GitHub's API
    doesn't expose it).
+6. **Disable "Push protection for yourself"** on your GitHub *account*
+   (`https://github.com/settings/code_security` → **User** section, not the
+   repo's own settings) if it's enabled. Confirmed live: this account-level
+   setting overrides both of this repo's own repo-level secret-scanning
+   toggles (which Terraform *does* manage - `security_and_analysis.
+   secret_scanning` and `.secret_scanning_push_protection` in
+   `github/modules/cicd-demo-repo/main.tf`) and blocks
+   `github_repository_file` from ever pushing `app/config.py`'s planted
+   secrets with a 409 (`Repository rule violations found: Secret detected in
+   content`), no matter what the repo's own settings say. This is a personal
+   GitHub account setting, not an org or repo one - the `integrations/github`
+   Terraform provider has no resource that can manage it, so it's a one-time
+   manual step.
 
 The workflow file here is a hand-authored analog of the one the Singularity
 console normally generates for you once you complete this flow through its
@@ -68,19 +81,21 @@ one once you've been through that flow for real.
 
 ## Demoing it
 
-**Important first-time gotcha**: GitHub only runs a `pull_request`-triggered
-workflow if that workflow file already exists on the base branch (`main`) at
-the time the PR opens - the very first `terraform apply` that creates this
-repo (and commits the workflow file to its default branch directly) sidesteps
-this, since the file lands on `main` immediately rather than arriving via a
-PR. Just be aware that if you ever remove and re-add the workflow file via a
-PR instead, that specific PR won't trigger itself.
+`s1-cns-scan.yml` only triggers on `pull_request` events, but every file
+above is pushed straight to `main` via the Contents API, which never fires
+one - so `terraform apply` also opens a one-time pull request
+(`trigger-initial-scan` → `main`, via `github_repository_pull_request` in
+`github/modules/cicd-demo-repo/main.tf`) purely to give the workflow
+something to fire on. `terraform output -raw cicd_demo_trigger_pr_url`
+(from the `github/environments/demo` environment) gives you its URL
+directly. Set `create_trigger_pr = false` if you'd rather open one
+yourself instead.
 
-Open a pull request that touches anything in this repo (even a trivial
-change, like editing this README). Watch the **Checks** tab: three steps
-(secret scan, IaC scan, vulnerability scan) run and publish results to the
-Singularity™ Operations Center CI/CD dashboard, in addition to failing the
-GitHub check if your configured scan policy's exit conditions are met.
+Open that PR (or any other pull request that touches this repo, even a
+trivial change). Watch the **Checks** tab: three steps (secret scan, IaC
+scan, vulnerability scan) run and publish results to the Singularity™
+Operations Center CI/CD dashboard, in addition to failing the GitHub check
+if your configured scan policy's exit conditions are met.
 
 To show the "fix it and the check goes green" arc: pin a
 `requirements.txt` entry to a patched version, remove the public-access
