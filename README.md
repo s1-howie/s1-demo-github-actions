@@ -109,10 +109,16 @@ payment hold, no network, no PR handy), `s1-cnapp-terraform/github/scripts/
 s1-cns-local-scan.sh` runs the same three `s1-cns-cli` scans directly
 against this `content/` directory on disk and still publishes results to
 the Singularity™ Operations Center CI/CD dashboard - it doesn't touch
-GitHub at all. Copy `local-scan.config.example` to `local-scan.config` in
-that same directory, fill in the same five `s1_*` values from the one-time
-setup above, then run the script. See that script's own comments for
-details.
+GitHub at all.
+
+Every `terraform apply` in `github/environments/demo` already regenerates
+`github/scripts/local-scan.config` from that environment's
+`terraform.tfvars` (`local_file.local_scan_config` in its `main.tf`), so
+there's usually nothing to configure by hand - just run the script. If
+you want to run it without ever having applied Terraform, copy
+`local-scan.config.example` to `local-scan.config` in that same directory
+and fill in the same five `s1_*` values from the one-time setup above
+instead. See the script's own comments for details.
 
 
 <!-- Opened automatically by Terraform (github_repository_pull_request in
