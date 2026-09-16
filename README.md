@@ -101,3 +101,15 @@ To show the "fix it and the check goes green" arc: pin a
 `requirements.txt` entry to a patched version, remove the public-access
 block override in `infra/main.tf`, or delete a hardcoded credential from
 `config.py`, then push again to the same PR.
+
+### Fallback: no GitHub? Run it locally
+
+If the GitHub side of this demo is unavailable for any reason (account
+payment hold, no network, no PR handy), `s1-cnapp-terraform/github/scripts/
+s1-cns-local-scan.sh` runs the same three `s1-cns-cli` scans directly
+against this `content/` directory on disk and still publishes results to
+the Singularity™ Operations Center CI/CD dashboard - it doesn't touch
+GitHub at all. Copy `local-scan.config.example` to `local-scan.config` in
+that same directory, fill in the same five `s1_*` values from the one-time
+setup above, then run the script. See that script's own comments for
+details.
