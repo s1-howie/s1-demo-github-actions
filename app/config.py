@@ -14,7 +14,7 @@ AWS_ACCESS_KEY_ID = "AKIA3ZSAAYKVTW3NBM7L"
 AWS_SECRET_ACCESS_KEY = "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"
 
 # Matches Stripe's live secret key format (sk_test_...).
-STRIPE_SECRET_KEY = "sk_test_51L53TeSBwzby5YcBooVe7xqrw9DrV7SWyW5WKKYGSFO4fNSoDyd167DZrmIW6lZE6pHUDrYe9zfqGnCHTQUKhnPc00eL5w5pxY"
+STRIPE_SECRET_KEY = "sk_test_51RISgKRc7i2tZ94OMKyqkkCcDHuXmIwR8lbTieHmk5tblj6Jow02UPG3tODwVuEog4XR6DNbEDlsLQjsN694gjcp00mAjkeuLU"
 
 # A full connection string with embedded credentials - a different, very
 # common real-world secret-leak shape (not a bare API key) than the two
